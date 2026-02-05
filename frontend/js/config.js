@@ -30,16 +30,15 @@ export const Config = {
     enabled: true,
     
     // Your API provider
-    provider: 'openrouter', // 'openrouter', 'openai', 'anthropic', or 'custom'
+    provider: 'anthropic', // 'openrouter', 'openai', 'anthropic', or 'custom'
     
     // Your API key (keep this private!)
     // IMPORTANT: In production, use environment variables or backend proxy
     // NEVER commit API keys to public repositories
-    apiKey: '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',
+    apiKey: '',
     
     // Model to use (provider-specific)
-    // User requested "glm 4.7free" - mapping to OpenRouter free GLM-4 model
-    model: 'thudm/glm-4-9b-chat:free', 
+    model: 'claude-3-5-sonnet-20241022', 
     
     // Custom endpoint (if provider is 'custom')
     customEndpoint: '',
