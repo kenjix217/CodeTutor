@@ -1,0 +1,28 @@
+# Private & System Files
+*.md
+*.MD
+!README.md
+!frontend/lessons/*.md
+
+# Architecture and System definitions (Explicit ignore for safety)
+Architecture.MD
+ARCHITECTURE.MD
+SYSTEM.md
+REQUIREMENTS.MD
+CODING_STANDARDS.md
+FREE_TOOLS_AND_LICENSING.md
+BUSINESS_MODEL_EVOLUTION.md
+CHANGELOG.md
+
+# Private Solutions
+golden_source/
+
+# Environment & Build
+venv/
+__pycache__/
+.env
+.DS_Store
+*.log
+backend/
+Recording*.mp4
+START_WITH_AI.bat

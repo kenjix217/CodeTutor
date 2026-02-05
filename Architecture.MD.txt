@@ -1,0 +1,102 @@
+ ### Architecture.MD
+# Python AI Tutor App — Project Architecture
+
+## 1. System Overview
+
+This application is an AI-powered learning platform designed to teach Python from absolute beginner to intermediate level. The system supports text-based and voice-based lessons, interactive homework, progress tracking, and AI-assisted tutoring.
+
+The architecture is modular, scalable, and designed to support incremental feature expansion.
+
+---
+
+## 2. High-Level Architecture Diagram
+
+```text
+Client (Web / Mobile)
+│
+├── Lesson Viewer (Text + Voice)
+├── Homework & Task Interface
+├── Progress Dashboard
+│
+└── API Gateway
+     │
+     ├── Lesson Service
+     ├── Homework & Evaluation Service
+     ├── AI Tutor Service
+     ├── Voice (TTS / STT) Service
+     ├── User Progress Service
+     │
+     └── Data Store
+3. Frontend Architecture
+Responsibilities
+Render lesson content (Markdown)
+Provide audio playback for AI voice narration
+Accept user code input
+Display homework feedback
+Track lesson completion
+Suggested Stack
+React or Next.js
+Markdown renderer
+Code editor component
+Audio player with speed control
+4. Backend Architecture
+Core Services
+Lesson Service
+Serves structured lesson content
+Handles lesson progression logic
+Homework & Evaluation Service
+Manages tasks and exercises
+Validates learner submissions
+Tracks attempts and completion
+AI Tutor Service
+Handles explanations, hints, and feedback
+Applies system prompt rules
+Adapts difficulty dynamically
+Voice Service
+Text-to-speech for lesson narration
+Optional speech-to-text for learner questions
+Progress Service
+Stores completion state
+Tracks mastery and weak areas
+5. AI Integration Architecture
+AI Roles
+Python tutor
+Debugging coach
+Learning companion
+Guardrails
+No auto-solving homework unless requested
+Encourage reasoning before answers
+Maintain beginner-friendly tone
+6. Data Architecture
+Core Entities
+User
+Lesson
+Task
+Submission
+Progress
+AudioAsset
+Storage
+Relational DB for structured data
+Object storage for audio files
+7. Security & Reliability
+Authentication for user progress
+Rate limiting on AI endpoints
+Logging of AI responses for quality control
+Versioning of lessons and tasks
+8. Scalability Considerations
+Stateless backend services
+Asynchronous AI requests
+Cache lesson content
+Separate voice processing pipelines
+9. Deployment Architecture
+Cloud-based hosting
+CI/CD pipeline
+Environment separation (dev, staging, prod)
+10. Cursor AI Usage Guidelines
+Use Cursor AI to:
+
+Scaffold services
+Generate UI components
+Refactor architecture
+Improve maintainability
+Assist with debugging and optimization
