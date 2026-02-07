@@ -23,6 +23,5 @@ __pycache__/
 .env
 .DS_Store
 *.log
-backend/
 Recording*.mp4
 START_WITH_AI.bat
