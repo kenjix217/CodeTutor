@@ -2,7 +2,7 @@
 *.md
 *.MD
 !README.md
-!lessons/*.md
+!frontend/lessons/*.md
 
 # Architecture and System definitions (Explicit ignore for safety)
 Architecture.MD
