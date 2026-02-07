@@ -1,6 +1,0 @@
-/* Editor body: wraps the code editor area (single column) */
-.editor-body {
-    display: flex;
-    flex-grow: 1;
-    overflow: hidden;
-}
