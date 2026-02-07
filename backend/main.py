@@ -167,4 +167,7 @@ async def ai_chat(request: AIChatRequest, current_user: Optional[models.User] = 
 
 if __name__ == "__main__":
     import uvicorn
+    # When running locally, start uvicorn
+    # On PythonAnywhere, this block should NOT run if imported correctly
+    # But just in case, we'll keep it for local dev
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
