@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn Python from scratch with AI-assisted interactive lessons">
+  <title>Python AI Tutor — Learn Python in Your Browser</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/snippets.css">
+  <link rel="stylesheet" href="css/lessons.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1 class="app-title">Python AI Tutor</h1>
+        <p class="app-subtitle">Learn Python — No Installation Required</p>
+      </div>
+      <nav class="app-nav">
+        <button id="nav-lessons" class="nav-button active" aria-label="View lessons">Lessons</button>
+        <button id="nav-practice" class="nav-button" aria-label="Practice coding">Practice</button>
+        <button id="nav-progress" class="nav-button" aria-label="View progress">Progress</button>
+        <button id="nav-resources" class="nav-button" aria-label="Resources">Resources</button>
+        <button id="nav-settings" class="nav-button" aria-label="Settings">Settings</button>
+        <button id="nav-auth" class="nav-button btn-auth" aria-label="Login or Register">Login</button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Auth View (Login/Register) -->
+      <section id="auth-view" class="view">
+        <div class="auth-container">
+          <div class="auth-box">
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+              <div class="form-group">
+                <label for="auth-username">Username</label>
+                <input type="text" id="auth-username" required>
+              </div>
+              <div class="form-group" id="email-group" style="display: none;">
+                <label for="auth-email">Email (Optional)</label>
+                <input type="email" id="auth-email">
+              </div>
+              <div class="form-group">
+                <label for="auth-password">Password</label>
+                <input type="password" id="auth-password" required>
+              </div>
+              <button type="submit" class="btn-primary" id="auth-submit">Login</button>
+            </form>
+            <p id="auth-toggle-text">
+              Don't have an account? <button id="auth-toggle-mode" class="btn-text">Register</button>
+            </p>
+            <p id="auth-error" class="error-message"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lesson List View -->
+      <section id="lesson-list-view" class="view active">
+        <div class="lesson-list-container">
+          <h2>Your Learning Path</h2>
+          <div class="lesson-list" id="lesson-list">
+            <!-- Dynamically populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Lesson Content View -->
+      <section id="lesson-view" class="view">
+        <div class="lesson-container">
+          <!-- Lesson Navigation -->
+          <div class="lesson-nav">
+            <button id="back-to-lessons" class="btn-secondary" aria-label="Back to lesson list">
+              ← Back to Lessons
+            </button>
+            <div class="lesson-meta">
+              <span id="lesson-number" class="lesson-number">Lesson 1</span>
+              <span id="lesson-title" class="lesson-title">Loading...</span>
+            </div>
+            <!-- Voice Controls -->
+            <div id="voice-controls" class="voice-controls" style="display: none;">
+              <button id="voice-play" class="btn-voice" aria-label="Play lesson audio" title="Play Lesson">
+                ▶️ Play
+              </button>
+              <button id="voice-pause" class="btn-voice" aria-label="Pause audio" title="Pause" style="display: none;">
+                ⏸️ Pause
+              </button>
+              <button id="voice-stop" class="btn-voice" aria-label="Stop audio" title="Stop">
+                ⏹️ Stop
+              </button>
+              <select id="voice-speed" class="voice-speed" aria-label="Playback speed" title="Speed">
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Lesson Content -->
+          <article id="lesson-content" class="lesson-content">
+            <!-- Dynamically populated by JavaScript -->
+          </article>
+
+          <!-- Homework Validation -->
+          <div id="homework-section" class="homework-section" style="display: none;">
+            <h3>Check Your Homework</h3>
+            <p>Paste your homework solution below and click "Check Homework" to validate it.</p>
+            <textarea 
+              id="homework-input" 
+              class="homework-input"
+              placeholder="# Paste your homework code here..."
+              rows="10"
+            ></textarea>
+            <div class="homework-actions">
+              <button id="check-homework" class="btn-primary">Check Homework</button>
+              <button id="clear-homework" class="btn-secondary">Clear</button>
+            </div>
+            <div id="homework-results" class="homework-results-container"></div>
+          </div>
+
+          <!-- AI Tutor Chat (Optional - shown if enabled) -->
+          <div id="ai-chat-section" class="ai-chat-section" style="display: none;">
+            <div class="ai-chat-header">
+              <h3>🤖 Ask AI Tutor</h3>
+              <button id="ai-chat-toggle" class="btn-text">Close</button>
+            </div>
+            <div id="ai-chat-messages" class="ai-chat-messages">
+              <div class="ai-message-system">
+                👋 Hi! I'm your AI tutor. Ask me questions about this lesson, but remember - I'll guide you to the answer, not give it away!
+              </div>
+            </div>
+            <div class="ai-chat-input-container">
+              <textarea 
+                id="ai-chat-input" 
+                class="ai-chat-input"
+                placeholder="Ask a question about this lesson..."
+                rows="2"
+              ></textarea>
+              <button id="ai-chat-send" class="btn-primary">Send</button>
+            </div>
+          </div>
+
+          <!-- Lesson Actions -->
+          <div class="lesson-actions">
+            <button id="ask-ai-tutor" class="btn-secondary ai-tutor-button" style="display: none;">
+              🤖 Ask AI Tutor
+            </button>
+            <button id="mark-complete" class="btn-primary">Mark as Complete</button>
+            <button id="next-lesson" class="btn-secondary">Next Lesson →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Practice View -->
+      <section id="practice-view" class="view">
+        <div class="practice-container">
+          <div class="practice-header">
+            <h2>Code Practice</h2>
+            <p>Write and run Python code directly in your browser</p>
+          </div>
+
+          <!-- Library Manager -->
+          <div class="library-manager">
+            <div class="library-header">
+              <h3>📦 Python Libraries</h3>
+              <button id="toggle-library-panel" class="btn-secondary">Manage Libraries</button>
+            </div>
+            
+            <div id="library-panel" class="library-panel" style="display: none;">
+              <!-- Install Custom Package -->
+              <div class="library-install-section">
+                <h4>Install Additional Package</h4>
+                <div class="library-install-form">
+                  <input 
+                    type="text" 
+                    id="package-name" 
+                    class="library-input" 
+                    placeholder="Package name (e.g., requests, beautifulsoup4)"
+                  >
+                  <button id="install-package" class="btn-primary">📥 Install</button>
+                </div>
+                
+                <details style="margin-top: 0.5rem;">
+                  <summary style="cursor: pointer; color: var(--color-primary); font-size: 0.9rem;">
+                    💡 Which packages work in browser?
+                  </summary>
+                  <div style="margin-top: 0.5rem; padding: 0.5rem; background: #f9fafb; border-radius: 4px;">
+                    <p style="margin: 0.25rem 0; font-size: 0.85rem;"><strong>✅ Usually Work:</strong></p>
+                    <ul style="margin: 0.25rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
+                      <li><code>requests</code> - HTTP library (CORS limited)</li>
+                      <li><code>beautifulsoup4</code> - HTML/XML parsing</li>
+                      <li><code>pillow</code> - Image processing</li>
+                      <li><code>regex</code> - Advanced regex</li>
+                      <li><code>python-dateutil</code> - Date utilities</li>
+                      <li>Most pure-Python packages</li>
+                    </ul>
+                    
+                    <p style="margin: 0.5rem 0 0.25rem 0; font-size: 0.85rem;"><strong>❌ Don't Work:</strong></p>
+                    <ul style="margin: 0.25rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
+                      <li><code>turtle</code> - GUI limitations</li>
+                      <li><code>sqlite3</code> - Not in Pyodide</li>
+                      <li><code>pygame</code> - Real-time games</li>
+                      <li><code>Flask/Django</code> - Need server</li>
+                      <li>Packages with C extensions</li>
+                    </ul>
+                    
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: #3b82f6;">
+                      <strong>📝 Note:</strong> For full library support, install real Python on your computer (see Resources tab).
+                    </p>
+                  </div>
+                </details>
+              </div>
+
+              <!-- Pre-loaded Libraries -->
+              <div class="library-section">
+                <h4>Pre-loaded Libraries ✅</h4>
+                <div class="library-list">
+                  <div class="library-item installed">
+                    <span class="library-name">numpy</span>
+                    <span class="library-desc">Numerical computing</span>
+                  </div>
+                  <div class="library-item installed">
+                    <span class="library-name">pandas</span>
+                    <span class="library-desc">Data analysis</span>
+                  </div>
+                  <div class="library-item installed">
+                    <span class="library-name">matplotlib</span>
+                    <span class="library-desc">Data visualization</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Installed Packages -->
+              <div class="library-section">
+                <h4>Custom Installed Packages</h4>
+                <div id="custom-packages" class="library-list">
+                  <p class="library-empty">No custom packages installed yet.</p>
+                </div>
+              </div>
+
+              <!-- Quick Examples -->
+              <details class="library-info">
+                <summary>📚 Library Usage Examples</summary>
+                <div class="library-list">
+              <p><strong>Pre-loaded (ready to use in browser):</strong></p>
+              <ul>
+                <li><code>numpy</code> - Data science and numerical computing ✅</li>
+                <li><code>pandas</code> - Data analysis and manipulation ✅</li>
+                <li><code>matplotlib</code> - Data visualization with graphs! ✅</li>
+                <li><code>json</code>, <code>csv</code>, <code>datetime</code> - Built-in libraries ✅</li>
+                <li><code>random</code>, <code>math</code> - Built-in (for games!) ✅</li>
+              </ul>
+              <p><strong>⚠️ Not available in browser:</strong></p>
+              <ul>
+                <li><code>sqlite3</code> - Use real Python for databases</li>
+                <li><code>turtle</code> - Use real Python for turtle graphics</li>
+                <li><code>requests</code> - Use real Python for API calls</li>
+                <li><code>Flask</code> - Use real Python for web apps</li>
+              </ul>
+              <p><strong>Example 1: Data Science (numpy, pandas)</strong></p>
+              <pre><code>import numpy as np
+import pandas as pd
+
+# NumPy array operations
+arr = np.array([1, 2, 3, 4, 5])
+print(f"Mean: {np.mean(arr)}")
+print(f"Sum: {np.sum(arr)}")
+
+# Pandas DataFrame
+df = pd.DataFrame({'Name': ['Alice', 'Bob'], 'Score': [92, 88]})
+print(df)
+print(f"Average: {df['Score'].mean()}")</code></pre>
+
+              <p><strong>Example 2: Data Visualization (matplotlib)</strong></p>
+              <pre><code>import matplotlib.pyplot as plt
+import numpy as np
+
+# Create data
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+
+# Create plot
+plt.figure(figsize=(8, 6))
+plt.plot(x, y, marker='o', color='blue', linewidth=2)
+plt.xlabel('X Values')
+plt.ylabel('Y Values')
+plt.title('My First Plot')
+plt.grid(True)
+plt.show()
+
+print("Plot created! See visualization above.")</code></pre>
+
+              <p><strong>Example 3: Database (sqlite3)</strong></p>
+              <pre><code>import sqlite3
+
+conn = sqlite3.connect(':memory:')
+c = conn.cursor()
+c.execute('CREATE TABLE students (name TEXT, grade INTEGER)')
+c.execute("INSERT INTO students VALUES ('Alice', 92)")
+c.execute("INSERT INTO students VALUES ('Bob', 88)")
+conn.commit()
+
+c.execute("SELECT * FROM students WHERE grade > 90")
+for row in c.fetchall():
+    print(row)
+conn.close()</code></pre>
+
+              <p><strong>Example 4: Games & Fun! 🎮</strong></p>
+              <pre><code># Number guessing game
+import random
+
+number = random.randint(1, 10)
+print("I'm thinking of a number 1-10!")
+# guess = int(input("Your guess: "))
+# (Try in real Python for input)
+
+# Simple visualization game
+import matplotlib.pyplot as plt
+import random
+
+scores = [random.randint(50, 100) for _ in range(5)]
+players = ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5']
+
+plt.bar(players, scores, color=['red', 'blue', 'green', 'orange', 'purple'])
+plt.title('Game High Scores')
+plt.ylabel('Score')
+plt.show()
+
+print(f"Winner: {players[scores.index(max(scores))]}")</code></pre>
+
+              <p><strong>⚡ Note:</strong> matplotlib plots appear as images above text output!</p>
+              <p><strong>🎮 Bonus:</strong> Check Lesson 23 for complete game examples!</p>
+              <p><strong>📝 Limitation:</strong> Not all packages work in browser. For Flask, web frameworks, and deployment, install real Python (see Resources tab).</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Code Editor (Independent) -->
+          <div class="editor-container" id="editor-container">
+            <div class="editor-header">
+              <label for="code-editor" class="editor-label">Python Code Editor</label>
+              <div class="editor-controls">
+                <button id="format-code" class="btn-secondary" title="Auto-format code with Black">✨ Prettify</button>
+                <button id="run-code" class="btn-primary" aria-label="Run Python code">▶ Run Code</button>
+                <button id="clear-code" class="btn-secondary" aria-label="Clear editor">Clear</button>
+              </div>
+            </div>
+            <div class="editor-body">
+                <div class="editor-content" id="editor-content">
+                  <textarea 
+                    id="code-editor" 
+                    class="code-editor"
+                    spellcheck="false"
+                    aria-label="Python code editor"
+                    placeholder="# Write your Python code here...&#10;print('Hello, Python!')"
+                  ></textarea>
+                </div>
+            </div>
+          </div>
+          
+          <!-- Editor Resize Handle -->
+          <div class="resize-handle" id="editor-resize-handle" title="Drag to resize editor height">
+            <div class="resize-bar">━━━━━ Drag to Resize Editor ━━━━━</div>
+          </div>
+
+          <!-- Output Area (Independent) -->
+          <div class="output-container" id="output-container">
+            <div class="output-header">
+              <label for="code-output" class="output-label">Output</label>
+              <button id="clear-output" class="btn-text" aria-label="Clear output">Clear Output</button>
+            </div>
+            <pre id="code-output" class="code-output" aria-live="polite">Output will appear here...</pre>
+          </div>
+          
+          <!-- Output Resize Handle -->
+          <div class="resize-handle" id="output-resize-handle" title="Drag to resize output height">
+            <div class="resize-bar">━━━━━ Drag to Resize Output ━━━━━</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Progress View -->
+      <section id="progress-view" class="view">
+        <div class="progress-container">
+          <h2>Your Progress</h2>
+          <div class="progress-stats" id="progress-stats">
+            <!-- Dynamically populated by JavaScript -->
+          </div>
+          <div class="progress-lessons" id="progress-lessons">
+            <!-- Dynamically populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Resources View -->
+      <section id="resources-view" class="view">
+        <div class="resources-container">
+          <h2>📚 Learning Resources</h2>
+          <p class="resources-subtitle">Additional guides and resources to support your learning journey</p>
+
+          <!-- Launchpad Starter Kit -->
+          <div class="resource-card">
+            <div class="resource-icon">🚀</div>
+            <div class="resource-content">
+              <h3>Starter Kit "Launchpad"</h3>
+              <p>
+                <strong>Everything you need in one ZIP file.</strong><br>
+                Includes PDF Cheatsheet, Setup Scripts (Windows/Mac), and 3 Template Projects.
+              </p>
+              <div class="resource-actions">
+                <button id="download-starter-kit" class="btn-primary">📦 Download Starter Kit (.zip)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Python Installation Guide -->
+          <div class="resource-card">
+            <div class="resource-icon">🐍</div>
+            <div class="resource-content">
+              <h3>Install Real Python</h3>
+              <p>
+                <strong>Required for Lessons 11-22</strong><br>
+                Complete guide to installing Python on your computer for advanced topics: 
+                libraries, web development, databases, and deployment.
+              </p>
+              <ul class="resource-features">
+                <li>✅ Windows, Mac, and Linux instructions</li>
+                <li>✅ pip and virtual environment setup</li>
+                <li>✅ VS Code editor configuration</li>
+                <li>✅ Troubleshooting common issues</li>
+              </ul>
+              <div class="resource-actions">
+                <a href="install-python.html" target="_blank" class="btn-primary">📥 Open Installation Guide</a>
+                <a href="https://www.python.org/downloads/" target="_blank" class="btn-secondary">
+                  Download Python
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lesson Completion Notice -->
+          <div class="resource-card">
+            <div class="resource-icon">🎓</div>
+            <div class="resource-content">
+              <h3>Transitioning to Advanced Lessons</h3>
+              <p>
+                Completed Lessons 1-10? Congratulations! Here's what you need to know before 
+                starting the advanced curriculum.
+              </p>
+              <ul class="resource-features">
+                <li>✅ What you've mastered so far</li>
+                <li>✅ Why real Python installation is needed</li>
+                <li>✅ Two learning path options</li>
+                <li>✅ Installation checklist</li>
+              </ul>
+              <div class="resource-actions">
+                <button id="show-transition-notice" class="btn-secondary">Read Transition Guide</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- External Resources -->
+          <div class="resource-card">
+            <div class="resource-icon">🔗</div>
+            <div class="resource-content">
+              <h3>External Python Resources</h3>
+              <p>
+                Additional free resources to supplement your learning.
+              </p>
+              <ul class="resource-features">
+                <li><a href="https://docs.python.org/3/tutorial/" target="_blank">Official Python Tutorial</a></li>
+                <li><a href="https://realpython.com/" target="_blank">Real Python (articles & tutorials)</a></li>
+                <li><a href="https://www.reddit.com/r/learnpython/" target="_blank">r/learnpython Community</a></li>
+                <li><a href="https://stackoverflow.com/questions/tagged/python" target="_blank">Stack Overflow (Q&A)</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings View -->
+      <section id="settings-view" class="view">
+        <div class="settings-container">
+          <h2>Settings</h2>
+          <p class="settings-subtitle">Configure optional features (platform works 100% without these)</p>
+
+          <!-- AI Tutor Settings -->
+          <div class="settings-section">
+            <h3>🤖 AI Tutor (Optional)</h3>
+            <p class="settings-description">
+              Enable interactive AI tutoring by adding your own API key. 
+              <strong>Platform is fully functional without this.</strong>
+            </p>
+            
+            <div class="setting-item">
+              <label for="ai-enabled" class="setting-label">
+                <input type="checkbox" id="ai-enabled" class="setting-checkbox">
+                Enable AI Tutor
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <label for="ai-provider" class="setting-label">Provider:</label>
+              <select id="ai-provider" class="setting-select">
+                <option value="openrouter">OpenRouter</option>
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic (Claude)</option>
+                <option value="custom">Custom Endpoint</option>
+              </select>
+            </div>
+
+            <div class="setting-item">
+              <label for="ai-key" class="setting-label">API Key:</label>
+              <input 
+                type="password" 
+                id="ai-key" 
+                class="setting-input"
+                placeholder="sk-or-... or your API key"
+                autocomplete="off"
+              >
+              <small class="setting-hint">🔒 Stored locally in your browser only</small>
+            </div>
+
+            <div class="setting-item">
+              <label for="ai-model" class="setting-label">Model:</label>
+              <input 
+                type="text" 
+                id="ai-model" 
+                class="setting-input"
+                placeholder="e.g., meta-llama/llama-3.2-3b-instruct:free"
+              >
+              <small class="setting-hint">Leave empty for provider default</small>
+            </div>
+
+            <div class="setting-item" id="custom-endpoint-item" style="display: none;">
+              <label for="ai-custom-endpoint" class="setting-label">Custom Endpoint:</label>
+              <input 
+                type="text" 
+                id="ai-custom-endpoint" 
+                class="setting-input"
+                placeholder="https://your-api-endpoint.com/v1/chat"
+              >
+            </div>
+
+            <div class="setting-item">
+              <label for="use-backend-proxy" class="setting-label">
+                <input type="checkbox" id="use-backend-proxy" class="setting-checkbox">
+                Use backend proxy
+              </label>
+              <small class="setting-hint">Only enable if you run your own backend server (e.g. localhost:8000). Leave unchecked to call the API directly from your browser.</small>
+            </div>
+          </div>
+
+          <!-- Voice Settings -->
+          <div class="settings-section">
+            <h3>🔊 Voice Narration (Free)</h3>
+            <p class="settings-description">
+              Uses browser built-in text-to-speech (completely free).
+            </p>
+            
+            <div class="setting-item">
+              <label for="voice-enabled" class="setting-label">
+                <input type="checkbox" id="voice-enabled" class="setting-checkbox" checked>
+                Enable Voice Narration
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <label for="voice-rate" class="setting-label">Speech Rate:</label>
+              <input 
+                type="range" 
+                id="voice-rate" 
+                class="setting-range"
+                min="0.5" 
+                max="2" 
+                step="0.1" 
+                value="1.0"
+              >
+              <span id="voice-rate-value">1.0x</span>
+            </div>
+
+            <div class="setting-item">
+              <label for="voice-pitch" class="setting-label">Pitch:</label>
+              <input 
+                type="range" 
+                id="voice-pitch" 
+                class="setting-range"
+                min="0.5" 
+                max="2" 
+                step="0.1" 
+                value="1.0"
+              >
+              <span id="voice-pitch-value">1.0</span>
+            </div>
+          </div>
+
+          <!-- Platform Settings -->
+          <div class="settings-section">
+            <h3>⚙️ Platform Settings</h3>
+            
+            <div class="setting-item">
+              <label for="require-homework" class="setting-label">
+                <input type="checkbox" id="require-homework" class="setting-checkbox" checked>
+                Require homework validation to complete lessons
+              </label>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="settings-actions">
+            <button id="save-settings" class="btn-primary">Save Settings</button>
+            <button id="reset-settings" class="btn-secondary">Reset to Defaults</button>
+          </div>
+
+          <!-- Status Messages -->
+          <div id="settings-status" class="settings-status"></div>
+
+          <!-- Future Notice -->
+          <div class="settings-notice" style="display: none;">
+            <h4>📝 Future Features (Coming Soon)</h4>
+            <p>
+              <strong>User Accounts:</strong> Save progress across devices, sync settings<br>
+              <strong>Paid Tier:</strong> AI Tutor included (~$10/month)<br>
+              <strong>Free Tier:</strong> Full platform (lessons, validation, execution)<br>
+            </p>
+            <p class="settings-notice-small">
+              Currently in testing phase. All features free while we validate the platform.
+              User accounts and paid tiers coming in future updates.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p class="footer-text">
+        Built with ❤️ for learners | 
+        <a href="install-python.html" target="_blank">📥 Install Real Python (for Lessons 11+)</a> |
+        <a href="https://github.com" target="_blank" rel="noopener">Free & Open Source</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loading-indicator" class="loading-indicator" aria-live="polite" aria-hidden="true">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- External Dependencies -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  
+  <!-- JavaScript Modules -->
+  <script type="module" src="js/app.js?v=40"></script>
+</body>
+</html>
+
