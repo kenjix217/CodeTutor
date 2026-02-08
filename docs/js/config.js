@@ -121,11 +121,11 @@ Your role: Guide and encourage, never solve for them.`
     progressStorageKey: 'python-tutor-progress',
     
     // Backend API URL (only used if useBackendProxy is true)
-    backendURL: 'http://localhost:8000',
+    backendURL: 'https://flexjin.pythonanywhere.com',
     
     // Use backend proxy for AI calls. Set false to call OpenRouter/OpenAI/Anthropic directly from the browser.
     // Set true only if you run your own backend that exposes /api/ai/chat.
-    useBackendProxy: false
+    useBackendProxy: true
   }
 };
 
