@@ -153,9 +153,49 @@ pre code {
   margin-top: 200px; /* Increased to accommodate taller fixed header */
 }
 
-/* ===================================
-   Header
-   =================================== */
+/* Google Login Button */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-sm);
+  background-color: white;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: var(--border-radius);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  margin-top: var(--spacing-md);
+}
+
+.btn-google:hover {
+  background-color: #f8f9fa;
+  border-color: #d2e3fc;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-md) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.auth-divider span {
+  padding: 0 var(--spacing-sm);
+}
 
 .app-header {
   background-color: var(--color-bg);

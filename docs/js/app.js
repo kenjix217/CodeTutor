@@ -30,6 +30,16 @@ class PythonTutorApp {
    * Initialize the application
    */
   async init() {
+    // Check for Google OAuth Token in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+        // We just returned from Google Login
+        this.authManager.setToken(token);
+        // Remove token from URL for clean history
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     this.setupNavigation();
     this.setupLessonList();
     this.setupAuthUI();
@@ -120,6 +130,15 @@ class PythonTutorApp {
         }
         submitBtn.disabled = false;
     });
+
+    // Google Login Handler
+    const googleBtn = document.getElementById('auth-google');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', () => {
+            // Redirect to backend Google Login endpoint
+            window.location.href = `${Config.platform.backendURL}/login/google`;
+        });
+    }
   }
   
   updateAuthButtonState() {
