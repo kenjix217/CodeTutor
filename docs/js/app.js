@@ -54,6 +54,51 @@ class PythonTutorApp {
         await this.authManager.fetchUserProfile();
         this.updateAuthButtonState();
     }
+
+    // Dropdown Logic
+    const menuBtn = document.getElementById('user-menu-btn');
+    const menuContent = document.getElementById('user-dropdown');
+    
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // If not logged in, just open auth modal
+            if (!this.authManager.isAuthenticated) {
+                this.switchView('auth');
+                return;
+            }
+            // Toggle dropdown
+            menuContent.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', () => {
+            if (menuContent.classList.contains('show')) {
+                menuContent.classList.remove('show');
+            }
+        });
+    }
+
+    // Menu Item Clicks
+    document.getElementById('menu-profile')?.addEventListener('click', () => this.showProfile());
+    document.getElementById('menu-settings')?.addEventListener('click', () => this.switchView('settings'));
+    document.getElementById('menu-logout')?.addEventListener('click', () => this.authManager.logout());
+  }
+  
+  async showProfile() {
+      this.switchView('profile');
+      const user = this.authManager.user;
+      if (!user) return;
+      
+      document.getElementById('profile-fullname').innerText = `${user.first_name} ${user.last_name}`;
+      document.getElementById('profile-username').innerText = `@${user.username}`;
+      document.getElementById('profile-xp').innerText = user.xp || 0;
+      document.getElementById('profile-level').innerText = `Level ${user.level || 1}`;
+      document.getElementById('profile-title').innerText = user.title || 'Novice Coder';
+      
+      // Calculate lessons
+      const progress = this.progressTracker.getProgress();
+      document.getElementById('profile-lessons').innerText = progress.completedLessons.length;
   }
 
   /**
@@ -169,13 +214,28 @@ class PythonTutorApp {
   }
   
   updateAuthButtonState() {
-    const btn = document.getElementById('nav-auth');
-    if (this.authManager.isAuthenticated) {
-        btn.innerText = `👤 ${this.authManager.user?.username || 'Profile'}`;
-        // Optional: Change click behavior to show profile/logout instead of login form
-        // For MVP, clicking it again shows Auth View which we can turn into a Profile view later
+    const btn = document.getElementById('user-menu-btn');
+    const nameSpan = document.getElementById('user-name');
+    const avatarSpan = document.getElementById('user-avatar');
+    const dropdown = document.getElementById('user-dropdown');
+    
+    if (this.authManager.isAuthenticated && this.authManager.user) {
+        const user = this.authManager.user;
+        nameSpan.innerText = user.first_name || user.username;
+        avatarSpan.innerText = user.avatar_url || '👤'; // Use emoji or image
+        
+        // Show dropdown content when clicked
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        };
     } else {
-        btn.innerText = 'Login';
+        nameSpan.innerText = 'Login / Register';
+        avatarSpan.innerText = '👤';
+        dropdown.classList.remove('show');
+        
+        // Reset to open login modal
+        btn.onclick = () => this.switchView('auth');
     }
   }
 

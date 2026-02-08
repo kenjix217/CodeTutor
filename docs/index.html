@@ -20,15 +20,60 @@
       <nav class="app-nav">
         <button id="nav-lessons" class="nav-button active" aria-label="View lessons">Lessons</button>
         <button id="nav-practice" class="nav-button" aria-label="Practice coding">Practice</button>
-        <button id="nav-progress" class="nav-button" aria-label="View progress">Progress</button>
         <button id="nav-resources" class="nav-button" aria-label="Resources">Resources</button>
-        <button id="nav-settings" class="nav-button" aria-label="Settings">Settings</button>
-        <button id="nav-auth" class="nav-button btn-auth" aria-label="Login or Register">Login</button>
+        
+        <!-- User Profile Dropdown (Replaces simple Login button) -->
+        <div class="user-menu-container">
+            <button id="user-menu-btn" class="nav-button btn-auth" aria-label="User Menu">
+                <span id="user-avatar">👤</span> 
+                <span id="user-name">Login</span>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div id="user-dropdown" class="user-dropdown-content">
+                <a href="#" id="menu-profile">👤 My Profile</a>
+                <a href="#" id="menu-settings">⚙️ Settings</a>
+                <a href="#" id="menu-security">🔒 Security</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" id="menu-logout" class="text-danger">🚪 Logout</a>
+            </div>
+        </div>
       </nav>
     </header>
 
     <!-- Main Content Area -->
     <main class="app-main">
+      <!-- Profile View -->
+      <section id="profile-view" class="view">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar-large">👤</div>
+                <div class="profile-info">
+                    <h2 id="profile-fullname">Loading...</h2>
+                    <p id="profile-username">@username</p>
+                    <div class="profile-badges">
+                        <span id="profile-level" class="badge badge-level">Level 1</span>
+                        <span id="profile-title" class="badge badge-title">Novice Coder</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-stats-grid">
+                <div class="stat-card">
+                    <h3>XP Earned</h3>
+                    <p id="profile-xp">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Lessons Completed</h3>
+                    <p id="profile-lessons">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Current Streak</h3>
+                    <p id="profile-streak">0 Days</p>
+                </div>
+            </div>
+        </div>
+      </section>
+
       <!-- Auth View (Login/Register) -->
       <section id="auth-view" class="view">
         <div class="auth-container">
