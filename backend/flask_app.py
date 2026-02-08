@@ -230,13 +230,82 @@ def authorize_google():
 @login_required
 def read_users_me():
     user = g.user
+    db = get_db()
+    
+    # Lazy load settings if not exist (auto-create)
+    if not user.settings:
+        user.settings = models.Settings(user_id=user.id)
+        db.add(user.settings)
+        db.commit()
+    
     return jsonify({
         "id": user.id,
         "username": user.username,
         "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "dob": user.dob,
+        "xp": user.xp,
+        "level": user.level,
+        "title": user.title,
+        "avatar_url": user.avatar_url,
         "created_at": user.created_at.isoformat(),
-        "has_api_key": bool(user.api_key_vault)
+        "settings": {
+            "theme": user.settings.theme,
+            "editor_font_size": user.settings.editor_font_size,
+            "ai_enabled": user.settings.ai_enabled,
+            "ai_provider": user.settings.ai_provider,
+            "ai_model": user.settings.ai_model,
+            "voice_enabled": user.settings.voice_enabled,
+            "voice_speed": user.settings.voice_speed,
+            "has_api_key": bool(user.settings.api_key_vault)
+        }
     })
+
+@app.route("/users/settings", methods=["PUT"])
+@login_required
+def update_settings():
+    user = g.user
+    db = get_db()
+    data = request.json
+    
+    if not user.settings:
+        user.settings = models.Settings(user_id=user.id)
+        db.add(user.settings)
+    
+    # Update fields
+    for field in ["theme", "editor_font_size", "ai_enabled", "ai_provider", "ai_model", "voice_enabled", "voice_speed"]:
+        if field in data:
+            setattr(user.settings, field, data[field])
+            
+    # Handle API Key separately (encryption later)
+    if "api_key_vault" in data:
+        user.settings.api_key_vault = data["api_key_vault"]
+        
+    db.commit()
+    return jsonify({"status": "updated"})
+
+@app.route("/users/xp", methods=["POST"])
+@login_required
+def award_xp():
+    user = g.user
+    db = get_db()
+    amount = request.json.get("amount", 10)
+    
+    user.xp += amount
+    
+    # Simple Level Up Logic
+    next_level_xp = user.level * 100
+    leveled_up = False
+    if user.xp >= next_level_xp:
+        user.level += 1
+        user.xp -= next_level_xp # Reset or keep accumulating (depending on design)
+        # Better design: keep accumulating, check threshold
+        leveled_up = True
+        
+    db.commit()
+    return jsonify({"xp": user.xp, "level": user.level, "leveled_up": leveled_up})
+
 
 @app.route("/sync/push", methods=["POST"])
 @login_required

@@ -16,12 +16,39 @@ class User(Base):
     last_name = Column(String, nullable=True)
     dob = Column(String, nullable=True)
     hashed_password = Column(String)
-    api_key_vault = Column(String, nullable=True) # Encrypted AI Key
-    created_at = Column(DateTime, default=datetime.utcnow)
-
+    
+    # Extended Profile
+    xp = Column(Integer, default=0)
+    level = Column(Integer, default=1)
+    title = Column(String, default="Novice Coder")
+    avatar_url = Column(String, nullable=True)
+    
     # Relationships
     progress = relationship("Progress", back_populates="owner")
+    settings = relationship("Settings", back_populates="owner", uselist=False)
     arcade_stats = relationship("ArcadeStats", back_populates="owner")
+
+class Settings(Base):
+    __tablename__ = "settings"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    
+    # UI Preferences
+    theme = Column(String, default="light") # light, dark
+    editor_font_size = Column(Integer, default=14)
+    
+    # AI Preferences
+    ai_enabled = Column(Boolean, default=True)
+    ai_provider = Column(String, default="openrouter")
+    ai_model = Column(String, default="thudm/glm-4-9b-chat:free")
+    api_key_vault = Column(String, nullable=True) # Encrypted
+    
+    # Voice Preferences
+    voice_enabled = Column(Boolean, default=True)
+    voice_speed = Column(Float, default=1.0)
+    
+    owner = relationship("User", back_populates="settings")
 
 class Progress(Base):
     __tablename__ = "progress"

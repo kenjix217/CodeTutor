@@ -20,19 +20,29 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     dob: Optional[str] = None # YYYY-MM-DD
+    xp: int = 0
+    level: int = 1
+    title: str = "Novice Coder"
+    avatar_url: Optional[str] = None
 
-class UserCreate(UserBase):
-    password: str
+class SettingsBase(BaseModel):
+    theme: str = "light"
+    editor_font_size: int = 14
+    ai_enabled: bool = True
+    ai_provider: str = "openrouter"
+    ai_model: str = "thudm/glm-4-9b-chat:free"
+    api_key_vault: Optional[str] = None
+    voice_enabled: bool = True
+    voice_speed: float = 1.0
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
+class SettingsUpdate(SettingsBase):
+    pass
 
-class UserResponse(UserBase):
+class UserProfile(UserBase):
     id: int
     created_at: datetime
-    has_api_key: bool = False # Don't send the actual key back!
-
+    settings: Optional[SettingsBase] = None
+    
     class Config:
         from_attributes = True
 
