@@ -41,12 +41,7 @@ google = oauth.register(
     name='google',
     client_id=os.getenv("GOOGLE_CLIENT_ID", "YOUR_GOOGLE_CLIENT_ID_HERE"),
     client_secret=os.getenv("GOOGLE_CLIENT_SECRET", "YOUR_GOOGLE_CLIENT_SECRET_HERE"),
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openid to fetch user info
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={'scope': 'openid email profile'},
 )
 
@@ -182,8 +177,12 @@ def authorize_google():
     db = get_db()
     try:
         token = google.authorize_access_token()
-        resp = google.get('userinfo')
-        user_info = resp.json()
+        # "userinfo" is now automatically parsed if scope includes 'openid'
+        user_info = token.get('userinfo')
+        
+        # Fallback if not in token (fetch manually)
+        if not user_info:
+            user_info = google.userinfo()
         
         email = user_info['email']
         username = email.split('@')[0] # Default username from email
