@@ -102,8 +102,16 @@ class PythonTutorApp {
         isRegisterMode = !isRegisterMode;
         title.innerText = isRegisterMode ? 'Register' : 'Login';
         submitBtn.innerText = isRegisterMode ? 'Register' : 'Login';
+        
+        // Toggle visibility
         emailGroup.style.display = isRegisterMode ? 'block' : 'none';
-        if (nameGroup) nameGroup.style.display = isRegisterMode ? 'flex' : 'none';
+        
+        // Ensure name group exists before accessing style
+        const nameGroupEl = document.getElementById('name-group');
+        if (nameGroupEl) {
+            nameGroupEl.style.display = isRegisterMode ? 'flex' : 'none';
+        }
+        
         toggleBtn.innerText = isRegisterMode ? 'Login' : 'Register';
         errorMsg.innerText = '';
     });
