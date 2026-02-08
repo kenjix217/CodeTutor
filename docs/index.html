@@ -33,38 +33,39 @@
       <section id="auth-view" class="view">
         <div class="auth-container">
           <div class="auth-box">
-            <h2 id="auth-title">Login</h2>
+            <h2 id="auth-title" style="text-align: center; margin-bottom: 1.5rem;">Login</h2>
             <form id="auth-form">
               <!-- Name Fields (Register Only) -->
               <div class="form-row" id="name-group" style="display: none;">
                 <div class="form-group half">
                   <label for="auth-firstname">First Name</label>
-                  <input type="text" id="auth-firstname">
+                  <input type="text" id="auth-firstname" placeholder="John">
                 </div>
                 <div class="form-group half">
                   <label for="auth-lastname">Last Name</label>
-                  <input type="text" id="auth-lastname">
+                  <input type="text" id="auth-lastname" placeholder="Doe">
                 </div>
               </div>
 
               <!-- DOB Field (Register Only) -->
               <div class="form-group" id="dob-group" style="display: none;">
                 <label for="auth-dob">Date of Birth</label>
-                <input type="date" id="auth-dob" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px;">
+                <input type="date" id="auth-dob" class="input-full">
               </div>
 
               <div class="form-group">
                 <label for="auth-username">Username</label>
-                <input type="text" id="auth-username" required>
+                <input type="text" id="auth-username" required placeholder="Pick a username">
               </div>
               <div class="form-group" id="email-group" style="display: none;">
                 <label for="auth-email">Email</label>
-                <input type="email" id="auth-email">
+                <input type="email" id="auth-email" placeholder="you@example.com">
               </div>
               <div class="form-group">
                 <label for="auth-password">Password</label>
-                <input type="password" id="auth-password" required>
+                <input type="password" id="auth-password" required placeholder="Minimum 8 characters">
               </div>
+              
               <button type="submit" class="btn-primary" id="auth-submit">Login</button>
               
               <!-- Google Login -->
