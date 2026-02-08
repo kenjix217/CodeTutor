@@ -135,14 +135,27 @@ class PythonTutorApp {
         submitBtn.disabled = false;
     });
 
-    // Google Login Handler
-    const googleBtn = document.getElementById('auth-google');
-    if (googleBtn) {
-        googleBtn.addEventListener('click', () => {
-            // Redirect to backend Google Login endpoint
-            window.location.href = `${Config.platform.backendURL}/login/google`;
-        });
-    }
+    // Google Login Handler - Direct Attachment
+    // Use a timeout to ensure DOM is ready if modal logic interferes
+    setTimeout(() => {
+        const googleBtn = document.getElementById('auth-google');
+        if (googleBtn) {
+            // Remove old listeners to prevent duplicates
+            const newBtn = googleBtn.cloneNode(true);
+            googleBtn.parentNode.replaceChild(newBtn, googleBtn);
+            
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent any form submission
+                e.stopPropagation();
+                console.log("Google Login Clicked");
+                // Hardcode URL for reliability or use Config if available
+                const backend = Config.platform.backendURL || 'https://flexjin.pythonanywhere.com';
+                window.location.href = `${backend}/login/google`;
+            });
+        } else {
+            console.error("Google Login Button not found in DOM");
+        }
+    }, 500);
   }
   
   updateAuthButtonState() {
