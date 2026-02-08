@@ -14,6 +14,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False) # Changed to Not Null
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
+    dob = Column(String, nullable=True)
     hashed_password = Column(String)
     api_key_vault = Column(String, nullable=True) # Encrypted AI Key
     created_at = Column(DateTime, default=datetime.utcnow)

@@ -93,6 +93,7 @@ class PythonTutorApp {
     const title = document.getElementById('auth-title');
     const emailGroup = document.getElementById('email-group');
     const nameGroup = document.getElementById('name-group');
+    const dobGroup = document.getElementById('dob-group');
     const errorMsg = document.getElementById('auth-error');
     
     let isRegisterMode = false;
@@ -106,11 +107,9 @@ class PythonTutorApp {
         // Toggle visibility
         emailGroup.style.display = isRegisterMode ? 'block' : 'none';
         
-        // Ensure name group exists before accessing style
-        const nameGroupEl = document.getElementById('name-group');
-        if (nameGroupEl) {
-            nameGroupEl.style.display = isRegisterMode ? 'flex' : 'none';
-        }
+        // Ensure name/dob groups exist before accessing style
+        if (nameGroup) nameGroup.style.display = isRegisterMode ? 'flex' : 'none';
+        if (dobGroup) dobGroup.style.display = isRegisterMode ? 'block' : 'none';
         
         toggleBtn.innerText = isRegisterMode ? 'Login' : 'Register';
         errorMsg.innerText = '';
@@ -123,13 +122,14 @@ class PythonTutorApp {
         const email = document.getElementById('auth-email').value;
         const firstName = document.getElementById('auth-firstname')?.value || '';
         const lastName = document.getElementById('auth-lastname')?.value || '';
+        const dob = document.getElementById('auth-dob')?.value || '';
         
         submitBtn.disabled = true;
         errorMsg.innerText = '';
         
         let result;
         if (isRegisterMode) {
-            result = await this.authManager.register(username, password, email, firstName, lastName);
+            result = await this.authManager.register(username, password, email, firstName, lastName, dob);
         } else {
             result = await this.authManager.login(username, password);
         }

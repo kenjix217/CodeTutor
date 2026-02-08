@@ -143,6 +143,7 @@ def register():
         email=user_data.email, 
         first_name=user_data.first_name,
         last_name=user_data.last_name,
+        dob=user_data.dob,
         hashed_password=hashed_pw
     )
     db.add(new_user)

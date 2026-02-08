@@ -19,6 +19,7 @@ class UserBase(BaseModel):
     email: EmailStr # Required + Validates format
     first_name: str
     last_name: str
+    dob: Optional[str] = None # YYYY-MM-DD
 
 class UserCreate(UserBase):
     password: str

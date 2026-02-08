@@ -15,7 +15,7 @@ export class AuthManager {
     /**
      * Register a new user
      */
-    async register(username, password, email, firstName, lastName) {
+    async register(username, password, email, firstName, lastName, dob) {
         try {
             const response = await fetch(`${Config.platform.backendURL}/register`, {
                 method: 'POST',
@@ -25,7 +25,8 @@ export class AuthManager {
                     password, 
                     email, 
                     first_name: firstName, 
-                    last_name: lastName 
+                    last_name: lastName,
+                    dob
                 })
             });
 
