@@ -7,17 +7,27 @@ from fastapi import FastAPI, HTTPException, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Dict, Optional
+from contextlib import asynccontextmanager
 import httpx
+from pydantic import BaseModel, Field
 import database, models, schemas, auth
 
-# Initialize DB Tables
-models.Base.metadata.create_all(bind=database.engine)
+# Initialize DB Tables (Run manually or via lifespan if not on PythonAnywhere)
+# models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(
     title="Python AI Tutor API",
     description="Backend for Python Learner Platform (Phase 3)",
     version="3.0.0"
 )
+
+# ---------------------------
+# Health Check
+# ---------------------------
+
+@app.get("/")
+def health_check():
+    return {"status": "ok", "message": "Python AI Tutor Backend is Live"}
 
 # CORS - Allow all for MVP (Restrict in Production)
 app.add_middleware(
@@ -116,11 +126,12 @@ def update_api_key(key_data: schemas.APIKeyUpdate, db: Session = Depends(databas
 
 # --- AI PROXY (Updated for Vault) ---
 
-class AIChatRequest(schemas.BaseModel):
+# Define the model locally (or ensure it's in schemas.py)
+class AIChatRequest(BaseModel):
     message: str
-    conversation_history: List[Dict[str, str]] = []
-    provider: str = 'openrouter'
-    model: str = 'thudm/glm-4-9b-chat:free'
+    conversation_history: List[Dict[str, str]] = Field(default_factory=list)
+    provider: str = "openrouter"
+    model: str = "thudm/glm-4-9b-chat:free"
 
 @app.post("/api/ai/chat")
 async def ai_chat(request: AIChatRequest, current_user: Optional[models.User] = Depends(auth.get_current_user)):
