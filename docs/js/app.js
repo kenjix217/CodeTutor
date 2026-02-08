@@ -156,8 +156,10 @@ class PythonTutorApp {
                 e.preventDefault(); // Prevent any form submission
                 e.stopPropagation();
                 console.log("Google Login Clicked");
-                // Hardcode URL for reliability or use Config if available
-                const backend = Config.platform.backendURL || 'https://flexjin.pythonanywhere.com';
+                
+                // FORCE LIVE URL to prevent localhost issues
+                const backend = 'https://flexjin.pythonanywhere.com';
+                
                 window.location.href = `${backend}/login/google`;
             });
         } else {
