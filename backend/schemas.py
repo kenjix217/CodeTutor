@@ -1,7 +1,7 @@
 """
 Pydantic Schemas for API Validation
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
 
@@ -16,7 +16,9 @@ class TokenData(BaseModel):
 # --- User Schemas ---
 class UserBase(BaseModel):
     username: str
-    email: Optional[str] = None
+    email: EmailStr # Required + Validates format
+    first_name: str
+    last_name: str
 
 class UserCreate(UserBase):
     password: str

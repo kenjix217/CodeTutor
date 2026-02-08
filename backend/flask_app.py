@@ -128,14 +128,23 @@ def register():
     except Exception as e:
         return jsonify({"detail": str(e)}), 422
 
-    # Check existing
-    db_user = db.query(models.User).filter(models.User.username == user_data.username).first()
-    if db_user:
+    # Check existing username
+    if db.query(models.User).filter(models.User.username == user_data.username).first():
         return jsonify({"detail": "Username already registered"}), 400
+
+    # Check existing email
+    if db.query(models.User).filter(models.User.email == user_data.email).first():
+        return jsonify({"detail": "Email already registered"}), 400
     
     # Create
     hashed_pw = get_password_hash(user_data.password)
-    new_user = models.User(username=user_data.username, email=user_data.email, hashed_password=hashed_pw)
+    new_user = models.User(
+        username=user_data.username, 
+        email=user_data.email, 
+        first_name=user_data.first_name,
+        last_name=user_data.last_name,
+        hashed_password=hashed_pw
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

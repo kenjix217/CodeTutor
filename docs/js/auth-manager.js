@@ -15,12 +15,18 @@ export class AuthManager {
     /**
      * Register a new user
      */
-    async register(username, password, email) {
+    async register(username, password, email, firstName, lastName) {
         try {
             const response = await fetch(`${Config.platform.backendURL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password, email })
+                body: JSON.stringify({ 
+                    username, 
+                    password, 
+                    email, 
+                    first_name: firstName, 
+                    last_name: lastName 
+                })
             });
 
             if (!response.ok) {

@@ -92,6 +92,7 @@ class PythonTutorApp {
     const submitBtn = document.getElementById('auth-submit');
     const title = document.getElementById('auth-title');
     const emailGroup = document.getElementById('email-group');
+    const nameGroup = document.getElementById('name-group');
     const errorMsg = document.getElementById('auth-error');
     
     let isRegisterMode = false;
@@ -102,6 +103,7 @@ class PythonTutorApp {
         title.innerText = isRegisterMode ? 'Register' : 'Login';
         submitBtn.innerText = isRegisterMode ? 'Register' : 'Login';
         emailGroup.style.display = isRegisterMode ? 'block' : 'none';
+        if (nameGroup) nameGroup.style.display = isRegisterMode ? 'flex' : 'none';
         toggleBtn.innerText = isRegisterMode ? 'Login' : 'Register';
         errorMsg.innerText = '';
     });
@@ -111,13 +113,15 @@ class PythonTutorApp {
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
         const email = document.getElementById('auth-email').value;
+        const firstName = document.getElementById('auth-firstname')?.value || '';
+        const lastName = document.getElementById('auth-lastname')?.value || '';
         
         submitBtn.disabled = true;
         errorMsg.innerText = '';
         
         let result;
         if (isRegisterMode) {
-            result = await this.authManager.register(username, password, email);
+            result = await this.authManager.register(username, password, email, firstName, lastName);
         } else {
             result = await this.authManager.login(username, password);
         }

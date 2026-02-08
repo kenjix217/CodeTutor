@@ -35,12 +35,24 @@
           <div class="auth-box">
             <h2 id="auth-title">Login</h2>
             <form id="auth-form">
+              <!-- Name Fields (Register Only) -->
+              <div class="form-row" id="name-group" style="display: none;">
+                <div class="form-group half">
+                  <label for="auth-firstname">First Name</label>
+                  <input type="text" id="auth-firstname">
+                </div>
+                <div class="form-group half">
+                  <label for="auth-lastname">Last Name</label>
+                  <input type="text" id="auth-lastname">
+                </div>
+              </div>
+
               <div class="form-group">
                 <label for="auth-username">Username</label>
                 <input type="text" id="auth-username" required>
               </div>
               <div class="form-group" id="email-group" style="display: none;">
-                <label for="auth-email">Email (Optional)</label>
+                <label for="auth-email">Email</label>
                 <input type="email" id="auth-email">
               </div>
               <div class="form-group">

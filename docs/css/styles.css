@@ -153,6 +153,17 @@ pre code {
   margin-top: 200px; /* Increased to accommodate taller fixed header */
 }
 
+/* Auth Form Layout */
+.form-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.form-group.half {
+  flex: 1;
+}
+
 /* Google Login Button */
 .btn-google {
   display: flex;
