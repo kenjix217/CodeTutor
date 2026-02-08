@@ -4,12 +4,13 @@ A robust, synchronous alternative to the FastAPI version.
 Run this on PythonAnywhere if FastAPI/uvicorn times out.
 """
 
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, g, url_for, session, redirect
 from flask_cors import CORS
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from authlib.integrations.flask_client import OAuth
 import requests
 import os
 
@@ -19,6 +20,7 @@ import models
 import schemas
 
 app = Flask(__name__)
+app.secret_key = "REPLACE_WITH_LONG_RANDOM_STRING_SESSION_KEY" # Required for OAuth session
 
 # Enable CORS for all domains
 CORS(app)
@@ -27,6 +29,26 @@ CORS(app)
 SECRET_KEY = "CHANGE_THIS_TO_A_REALLY_LONG_RANDOM_STRING_FOR_PRODUCTION"
 ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# ---------------------------
+# OAuth Setup (Google)
+# ---------------------------
+oauth = OAuth(app)
+
+# NOTE: You must set these in PythonAnywhere WSGI config (os.environ)
+# OR replace them here directly for testing (but don't commit real secrets!)
+google = oauth.register(
+    name='google',
+    client_id=os.getenv("GOOGLE_CLIENT_ID", "YOUR_GOOGLE_CLIENT_ID_HERE"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET", "YOUR_GOOGLE_CLIENT_SECRET_HERE"),
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openid to fetch user info
+    client_kwargs={'scope': 'openid email profile'},
+)
 
 # ---------------------------
 # Database Helpers
@@ -142,6 +164,55 @@ def login():
     
     token = create_access_token(data={"sub": user.username})
     return jsonify({"access_token": token, "token_type": "bearer"})
+
+# ---------------------------
+# OAuth Routes
+# ---------------------------
+
+@app.route('/login/google')
+def login_google():
+    """Initiate Google OAuth flow"""
+    # Requires HTTPS on production
+    redirect_uri = url_for('authorize_google', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.route('/auth/google/callback')
+def authorize_google():
+    """Handle Google OAuth callback"""
+    db = get_db()
+    try:
+        token = google.authorize_access_token()
+        resp = google.get('userinfo')
+        user_info = resp.json()
+        
+        email = user_info['email']
+        username = email.split('@')[0] # Default username from email
+        
+        # Check if user exists
+        user = db.query(models.User).filter(models.User.email == email).first()
+        
+        if not user:
+            # Create new user automatically
+            # We set a random unguessable password since they use Google to login
+            import secrets
+            random_pw = secrets.token_urlsafe(16)
+            hashed_pw = get_password_hash(random_pw)
+            
+            user = models.User(username=username, email=email, hashed_password=hashed_pw)
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+        # Create JWT for our app
+        app_token = create_access_token(data={"sub": user.username})
+        
+        # Redirect to frontend with token
+        # NOTE: Update this URL to your actual frontend URL
+        frontend_url = "https://kenjix217.github.io/CodeTutor?token=" + app_token
+        return redirect(frontend_url)
+        
+    except Exception as e:
+        return f"Auth failed: {str(e)}", 400
 
 @app.route("/users/me", methods=["GET"])
 @login_required
