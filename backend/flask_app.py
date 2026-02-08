@@ -19,6 +19,9 @@ import database
 import models
 import schemas
 
+# Create Database Tables if they don't exist
+models.Base.metadata.create_all(bind=database.engine)
+
 app = Flask(__name__)
 app.secret_key = "REPLACE_WITH_LONG_RANDOM_STRING_SESSION_KEY" # Required for OAuth session
 
