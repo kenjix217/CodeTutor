@@ -150,7 +150,7 @@ pre code {
   max-width: var(--max-width-wide);
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-md);
-  margin-top: 200px; /* Increased to accommodate taller fixed header */
+  margin-top: 140px; /* Adjusted for fixed header */
 }
 
 /* User Menu (Dropdown) */

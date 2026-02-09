@@ -11,8 +11,8 @@ import { AITutor } from './ai-tutor.js?v=40';
 import { Config } from './config.js?v=40';
 import { AuthManager } from './auth-manager.js?v=40';
 import { Launchpad } from './launchpad.js?v=40';
-import { errorHandler } from './error-handler.js?v=40';
-import { gamification } from './gamification.js?v=40';
+import { gamification } from './error-handler.js?v=40';
+import { errorHandler as friendlyErrorHandler } from './gamification.js?v=40';
 
 class PythonTutorApp {
   constructor() {
@@ -24,7 +24,7 @@ class PythonTutorApp {
     this.aiTutor = new AITutor();
     this.authManager = new AuthManager();
     this.launchpad = new Launchpad();
-    this.errorHandler = errorHandler;
+    this.errorHandler = friendlyErrorHandler;
     this.gamification = gamification;
     
     this.init();
@@ -258,6 +258,15 @@ class PythonTutorApp {
              btn.disabled = false;
           });
       }
+  }
+
+  /**
+   * Setup Gamification UI
+   */
+  setupGamificationUI() {
+      // Gamification system handles its own notifications
+      // This method is called during initialization but doesn't need explicit UI setup
+      // The gamification system shows notifications dynamically when events occur
   }
 
   /**
