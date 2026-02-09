@@ -107,9 +107,10 @@ export class ProgressTracker {
     if (!statsContainer || !lessonsContainer) return;
 
     // Render statistics
-    const totalLessons = 3; // Will be dynamic later
+    const lessonsData = this.getLessonsData();
+    const totalLessons = lessonsData.length;
     const completed = this.progress.completedLessons.length;
-    const percentage = this.getCompletionPercentage(totalLessons);
+    const percentage = Math.round((completed / totalLessons) * 100);
 
     statsContainer.innerHTML = `
       <div class="stat-card">
@@ -127,11 +128,10 @@ export class ProgressTracker {
     `;
 
     // Render lesson progress list
-    const lessons = this.getLessonsData();
     lessonsContainer.innerHTML = `
       <h3>Lesson Progress</h3>
       <div class="progress-lesson-list">
-        ${lessons.map(lesson => {
+        ${lessonsData.map(lesson => {
           const isComplete = this.isLessonComplete(lesson.id);
           return `
             <div class="progress-lesson-item ${isComplete ? 'completed' : ''}">
@@ -163,7 +163,7 @@ export class ProgressTracker {
   }
 
   /**
-   * Get lessons data (temporary - will be centralized later)
+   * Get lessons data (centralized lesson list)
    */
   getLessonsData() {
     return [
@@ -177,6 +177,7 @@ export class ProgressTracker {
       { id: 'lesson-08', title: 'Lesson 8: File Handling' },
       { id: 'lesson-09', title: 'Lesson 9: Error Handling' },
       { id: 'lesson-10', title: 'Lesson 10: Introduction to OOP' },
+      { id: 'lesson-10-5', title: 'Lesson 10.5: List Methods & Comprehensions' },
       { id: 'lesson-11', title: 'Lesson 11: Working with External Libraries' },
       { id: 'lesson-12', title: 'Lesson 12: Working with APIs' },
       { id: 'lesson-13', title: 'Lesson 13: Data Processing Basics' },
@@ -187,8 +188,12 @@ export class ProgressTracker {
       { id: 'lesson-18', title: 'Lesson 18: Data Analysis' },
       { id: 'lesson-19', title: 'Lesson 19: Automation and Scripting' },
       { id: 'lesson-20', title: 'Lesson 20: Testing and Quality' },
-      { id: 'lesson-21', title: 'Lesson 21: Deployment and Production' },
-      { id: 'lesson-22', title: 'Lesson 22: Best Practices & Final Project' }
+      { id: 'lesson-21', title: 'Lesson 21: Debugging Strategies' },
+      { id: 'lesson-22', title: 'Lesson 22: Real-World Mini Projects' },
+      { id: 'lesson-23', title: 'Lesson 23: Web Scraping Introduction' },
+      { id: 'lesson-24', title: 'Lesson 24: API Basics' },
+      { id: 'lesson-25', title: 'Lesson 25: Final Capstone Project' },
+      { id: 'lesson-23-bonus', title: 'Bonus: Creating Games with Python' }
     ];
   }
 }

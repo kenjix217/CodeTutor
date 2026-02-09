@@ -483,27 +483,6 @@ export class LessonViewer {
       this.addChatMessage('ai', `Sorry, I encountered an error: ${error.message}`);
     }
   }
-    
-    // Add user message to UI
-    this.addChatMessage('user', message);
-    input.value = '';
-    
-    // Show loading
-    const loadingId = this.addChatMessage('ai', '💭 Thinking...');
-    
-    try {
-      // Get AI response
-      const response = await this.aiTutor.chat(message);
-      
-      // Remove loading, add response
-      this.removeChatMessage(loadingId);
-      this.addChatMessage('ai', response);
-      
-    } catch (error) {
-      this.removeChatMessage(loadingId);
-      this.addChatMessage('ai', `Sorry, I encountered an error: ${error.message}`);
-    }
-  }
 
   /**
    * Check if text contains image data
