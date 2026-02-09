@@ -164,9 +164,9 @@ export class FriendlyErrorHandler {
         '✨ Hint 4: Remember: text + number causes an error!',
       ],
       'IndentationError': [
-        '🤔 Hint 1: Code inside if/for/while/def/class needs 4 spaces more than the line above',
-        '💡 Hint 2: Use the Tab key or press Space 4 times to indent',
-        '🔍 Hint 3: Python is picky - don't mix spaces and tabs!',
+        '🤔 Hint 1: Code inside if/for/while/def/class needs 4 spaces more than line above',
+        '💡 Hint 2: Use Tab key or press Space 4 times to indent',
+        '🔍 Hint 3: Python is picky - don\'t mix spaces and tabs!',
         '✨ Hint 4: Most editors have a "Show Indentation" feature to help!'
       ],
       'IndexError': [
