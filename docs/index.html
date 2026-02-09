@@ -571,8 +571,8 @@ print(f"Winner: {players[scores.index(max(scores))]}")</code></pre>
           <div class="settings-section">
             <h3>🤖 AI Tutor (Optional)</h3>
             <p class="settings-description">
-              Enable interactive AI tutoring by adding your own API key. 
-              <strong>Platform is fully functional without this.</strong>
+              Enable interactive AI tutoring. 
+              <strong>Powered by OpenRouter (Free Tier).</strong>
             </p>
             
             <div class="setting-item">
@@ -582,55 +582,13 @@ print(f"Winner: {players[scores.index(max(scores))]}")</code></pre>
               </label>
             </div>
 
-            <div class="setting-item">
-              <label for="ai-provider" class="setting-label">Provider:</label>
-              <select id="ai-provider" class="setting-select">
-                <option value="openrouter">OpenRouter</option>
-                <option value="openai">OpenAI</option>
-                <option value="anthropic">Anthropic (Claude)</option>
-                <option value="custom">Custom Endpoint</option>
-              </select>
-            </div>
-
-            <div class="setting-item">
-              <label for="ai-key" class="setting-label">API Key:</label>
-              <input 
-                type="password" 
-                id="ai-key" 
-                class="setting-input"
-                placeholder="sk-or-... or your API key"
-                autocomplete="off"
-              >
-              <small class="setting-hint">🔒 Stored locally in your browser only</small>
-            </div>
-
-            <div class="setting-item">
-              <label for="ai-model" class="setting-label">Model:</label>
-              <input 
-                type="text" 
-                id="ai-model" 
-                class="setting-input"
-                placeholder="e.g., meta-llama/llama-3.2-3b-instruct:free"
-              >
-              <small class="setting-hint">Leave empty for provider default</small>
-            </div>
-
-            <div class="setting-item" id="custom-endpoint-item" style="display: none;">
-              <label for="ai-custom-endpoint" class="setting-label">Custom Endpoint:</label>
-              <input 
-                type="text" 
-                id="ai-custom-endpoint" 
-                class="setting-input"
-                placeholder="https://your-api-endpoint.com/v1/chat"
-              >
-            </div>
-
-            <div class="setting-item">
-              <label for="use-backend-proxy" class="setting-label">
-                <input type="checkbox" id="use-backend-proxy" class="setting-checkbox">
-                Use backend proxy
-              </label>
-              <small class="setting-hint">Only enable if you run your own backend server (e.g. localhost:8000). Leave unchecked to call the API directly from your browser.</small>
+            <!-- Admin Only Settings (Hidden) -->
+            <div style="display: none;">
+                <select id="ai-provider"><option value="openrouter">OpenRouter</option></select>
+                <input type="password" id="ai-key">
+                <input type="text" id="ai-model">
+                <input type="text" id="ai-custom-endpoint">
+                <input type="checkbox" id="use-backend-proxy" checked>
             </div>
           </div>
 

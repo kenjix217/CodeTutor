@@ -753,6 +753,28 @@ button {
   gap: var(--spacing-md);
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#ask-ai-tutor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: white;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+#ask-ai-tutor:hover {
+  background: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
 }
 
 /* ===================================
@@ -1636,6 +1658,9 @@ button {
   display: flex;
   gap: var(--spacing-sm);
   align-items: flex-end;
+  background: white;
+  padding: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
 }
 
 .ai-chat-input {
@@ -1645,12 +1670,22 @@ button {
   border-radius: var(--border-radius);
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
-  resize: vertical;
+  resize: none;
+  min-height: 48px; /* Ensure strictly visible height */
 }
 
 .ai-chat-input:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+#ai-chat-send {
+  height: 48px; /* Match input height */
+  min-width: 80px; /* Prevent squashing */
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===================================

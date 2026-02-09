@@ -453,23 +453,23 @@ export class LessonViewer {
    * Send message to AI tutor
    */
   async sendAIMessage() {
-    if (!this.aiTutor) return;
-
+    if (!this.aiTutor) return; 
+    
     const input = document.getElementById('ai-chat-input');
     const messagesContainer = document.getElementById('ai-chat-messages');
     
-    if (!input || !messagesContainer) return;
-
+    if (!input || !messagesContainer) return; 
+    
     const message = input.value.trim();
-    if (!message) return;
-
-    // Add user message to UI
+    if (!message) return; 
+    
+     // Add user message to UI
     this.addChatMessage('user', message);
     input.value = '';
-
+    
     // Show loading
     const loadingId = this.addChatMessage('ai', '💭 Thinking...');
-
+    
     try {
       // Get AI response
       const response = await this.aiTutor.chat(message);
@@ -477,11 +477,47 @@ export class LessonViewer {
       // Remove loading, add response
       this.removeChatMessage(loadingId);
       this.addChatMessage('ai', response);
-
+      
     } catch (error) {
       this.removeChatMessage(loadingId);
       this.addChatMessage('ai', `Sorry, I encountered an error: ${error.message}`);
     }
+  }
+    
+    // Add user message to UI
+    this.addChatMessage('user', message);
+    input.value = '';
+    
+    // Show loading
+    const loadingId = this.addChatMessage('ai', '💭 Thinking...');
+    
+    try {
+      // Get AI response
+      const response = await this.aiTutor.chat(message);
+      
+      // Remove loading, add response
+      this.removeChatMessage(loadingId);
+      this.addChatMessage('ai', response);
+      
+    } catch (error) {
+      this.removeChatMessage(loadingId);
+      this.addChatMessage('ai', `Sorry, I encountered an error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Check if text contains image data
+   */
+  containsImageData(text) {
+    const imagePatterns = [
+      /data:image\/[a-z]+;base64/i,
+      /data:application\/pdf/i,
+      /data:application\/msword/i,
+      /\.(png|jpe?g|gif|bmp|webp|pdf|doc|docx)$/i,
+      /^<img /i
+    ];
+    
+    return imagePatterns.some(pattern => pattern.test(text));
   }
 
   /**

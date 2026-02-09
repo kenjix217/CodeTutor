@@ -110,11 +110,9 @@ export class Settings {
     try {
       // Get values from UI
       const aiEnabled = document.getElementById('ai-enabled')?.checked || false;
-      const aiProvider = document.getElementById('ai-provider')?.value || 'openrouter';
-      const aiKey = document.getElementById('ai-key')?.value?.trim() || '';
-      const aiModel = document.getElementById('ai-model')?.value?.trim() || '';
-      const aiCustomEndpoint = document.getElementById('ai-custom-endpoint')?.value?.trim() || '';
-      const useBackendProxy = document.getElementById('use-backend-proxy')?.checked ?? false;
+      
+      // Enforce backend proxy for all users
+      const useBackendProxy = true;
 
       const voiceEnabled = document.getElementById('voice-enabled')?.checked ?? true;
       const voiceRate = parseFloat(document.getElementById('voice-rate')?.value || 1.0);
@@ -127,10 +125,11 @@ export class Settings {
         ai: {
           ...Config.ai,
           enabled: aiEnabled,
-          provider: aiProvider,
-          apiKey: aiKey,
-          model: aiModel || Config.ai.model,
-          customEndpoint: aiCustomEndpoint
+          // Force defaults for backend routing
+          provider: 'openrouter',
+          apiKey: '', // Client side key should be empty
+          model: 'thudm/glm-4-9b-chat:free',
+          customEndpoint: ''
         },
         voice: {
           ...Config.voice,
@@ -141,7 +140,8 @@ export class Settings {
         features: {
           ...Config.features,
           requireHomeworkValidation: requireHomework,
-          showAITutor: aiEnabled && aiKey !== ''
+          // Show AI tutor if enabled (key is managed by backend now)
+          showAITutor: aiEnabled
         },
         platform: {
           ...Config.platform,

@@ -11,6 +11,8 @@ import { AITutor } from './ai-tutor.js?v=40';
 import { Config } from './config.js?v=40';
 import { AuthManager } from './auth-manager.js?v=40';
 import { Launchpad } from './launchpad.js?v=40';
+import { errorHandler } from './error-handler.js?v=40';
+import { gamification } from './gamification.js?v=40';
 
 class PythonTutorApp {
   constructor() {
@@ -22,6 +24,8 @@ class PythonTutorApp {
     this.aiTutor = new AITutor();
     this.authManager = new AuthManager();
     this.launchpad = new Launchpad();
+    this.errorHandler = errorHandler;
+    this.gamification = gamification;
     
     this.init();
   }
@@ -44,6 +48,7 @@ class PythonTutorApp {
     this.setupLessonList();
     this.setupAuthUI();
     this.setupResourcesUI();
+    this.setupGamificationUI();
     this.loadInitialView();
     
     // Inject AI tutor into lesson viewer
@@ -439,6 +444,12 @@ class PythonTutorApp {
    * Switch between main views
    */
   switchView(viewName) {
+    // Redirect if trying to access login while authenticated
+    if (viewName === 'auth' && this.authManager.isAuthenticated) {
+        this.showProfile();
+        return;
+    }
+
     // Update navigation buttons
     document.querySelectorAll('.nav-button').forEach(btn => {
       btn.classList.remove('active');

@@ -137,16 +137,22 @@ export function validateConfig() {
   const warnings = [];
   
   // Check AI configuration
-  if (Config.ai.enabled && !Config.ai.apiKey) {
-    warnings.push('⚠️ AI Tutor enabled but no API key provided. AI features will not work.');
+  // If using backend proxy, we don't need a client-side API key
+  const isAIReady = Config.ai.enabled && (Config.ai.apiKey || Config.platform.useBackendProxy);
+
+  if (Config.ai.enabled && !isAIReady) {
+    warnings.push('⚠️ AI Tutor enabled but no API key provided and backend proxy is disabled.');
   }
   
-  if (Config.ai.enabled && Config.ai.apiKey) {
+  if (isAIReady) {
     console.log('✅ AI Tutor: Enabled');
-    console.log(`   Provider: ${Config.ai.provider}`);
-    console.log(`   Model: ${Config.ai.model}`);
+    if (Config.platform.useBackendProxy) {
+      console.log('   Mode: Backend Proxy (Secure)');
+    } else {
+      console.log(`   Provider: ${Config.ai.provider}`);
+    }
   } else {
-    console.log('ℹ️ AI Tutor: Disabled (platform works 100% without it)');
+    console.log('ℹ️ AI Tutor: Disabled');
   }
   
   // Check voice configuration
