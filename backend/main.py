@@ -159,22 +159,27 @@ class AIChatRequest(BaseModel):
     message: str
     conversation_history: List[Dict[str, str]] = Field(default_factory=list)
     provider: str = "openrouter"
-    model: str = "thudm/glm-4-9b-chat:free"
+    model: str = "thudm/glm-4-9b-chat:free" # Default model
 
 @app.post("/api/ai/chat")
 async def ai_chat(
     request: AIChatRequest,
     current_user: Optional[models.User] = Depends(auth.get_current_user)
 ):
-    api_key = None
-
-    if current_user and current_user.api_key_vault:
-        api_key = current_user.api_key_vault
+    # CENTRAL API KEY CONFIGURATION
+    # Replace the string below with your actual OpenRouter API Key
+    api_key = "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" 
+    
+    if not api_key or "YOUR-KEY-HERE" in api_key:
+        print("⚠️ Warning: Server API Key not configured in backend/main.py")
+        # Fallback to user key if server key is missing (optional)
+        if current_user and current_user.api_key_vault:
+            api_key = current_user.api_key_vault
 
     if not api_key:
         raise HTTPException(
-            status_code=400,
-            detail="No API Key found. Please add one in Settings (Vault)."
+            status_code=500,
+            detail="Server AI configuration missing. Please contact administrator."
         )
 
     try:
