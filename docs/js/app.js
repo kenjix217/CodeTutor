@@ -360,6 +360,12 @@ class PythonTutorApp {
         description: 'Learn Object-Oriented Programming basics: classes, objects, attributes, and methods.'
       },
       {
+        id: 'lesson-10-5',
+        number: 10.5,
+        title: 'List Methods & Comprehensions',
+        description: 'Master powerful list operations like methods, sorting, and list comprehensions.'
+      },
+      {
         id: 'lesson-11',
         number: 11,
         title: 'Working with External Libraries',
@@ -422,18 +428,36 @@ class PythonTutorApp {
       {
         id: 'lesson-21',
         number: 21,
-        title: 'Deployment and Production',
-        description: 'Deploy applications to the cloud and manage production environments.'
+        title: 'Debugging Strategies',
+        description: 'Learn to find and fix bugs in your Python code like a pro detective!'
       },
       {
         id: 'lesson-22',
         number: 22,
-        title: 'Best Practices & Final Project',
-        description: 'Master professional practices and complete a comprehensive final project.'
+        title: 'Real-World Mini Projects',
+        description: 'Build practical, useful Python projects: calculator, to-do list, and more!'
+      },
+      {
+        id: 'lesson-23',
+        number: 23,
+        title: 'Web Scraping Introduction',
+        description: 'Learn to automatically extract data from websites using BeautifulSoup and requests.'
+      },
+      {
+        id: 'lesson-24',
+        number: 24,
+        title: 'API Basics',
+        description: 'Connect to web services and get data programmatically using REST APIs.'
+      },
+      {
+        id: 'lesson-25',
+        number: 25,
+        title: 'Final Capstone Project',
+        description: 'Build a complete, portfolio-worthy Python application that showcases everything you have learned!'
       },
       {
         id: 'lesson-23-bonus',
-        number: 23,
+        number: 26,
         title: '🎮 Bonus: Creating Games with Python',
         description: 'Learn to create fun games! Text adventures, quizzes, visualizations, and more.'
       }
