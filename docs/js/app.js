@@ -3,16 +3,16 @@
  * Handles navigation, initialization, and module coordination
  */
 
-import { LessonViewer } from './lesson-viewer.js?v=42';
-import { CodeEditor } from './code-editor.js?v=42';
-import { ProgressTracker } from './progress-tracker.js?v=42';
-import { Settings } from './settings.js?v=42';
-import { AITutor } from './ai-tutor.js?v=42';
-import { Config } from './config.js?v=42';
-import { AuthManager } from './auth-manager.js?v=42';
-import { Launchpad } from './launchpad.js?v=42';
-import { gamification } from './error-handler.js?v=42';
-import { errorHandler as friendlyErrorHandler } from './gamification.js?v=42';
+import { LessonViewer } from './lesson-viewer.js?v=43';
+import { CodeEditor } from './code-editor.js?v=43';
+import { ProgressTracker } from './progress-tracker.js?v=43';
+import { Settings } from './settings.js?v=43';
+import { AITutor } from './ai-tutor.js?v=43';
+import { Config } from './config.js?v=43';
+import { AuthManager } from './auth-manager.js?v=43';
+import { Launchpad } from './launchpad.js?v=43';
+import { gamification } from './error-handler.js?v=43';
+import { errorHandler as friendlyErrorHandler } from './gamification.js?v=43';
 
 class PythonTutorApp {
   constructor() {

@@ -120,11 +120,12 @@ Your role: Guide and encourage, never solve for them.`
     // Progress storage key
     progressStorageKey: 'python-tutor-progress',
     
-    // Backend API URL (only used if useBackendProxy is true)
+    // Backend API URL (HARDCODED - do not change)
+    // Using PythonAnywhere backend for AI proxy
     backendURL: 'https://flexjin.pythonanywhere.com',
     
-    // Use backend proxy for AI calls. Set false to call OpenRouter/OpenAI/Anthropic directly from the browser.
-    // Set true only if you run your own backend that exposes /api/ai/chat.
+    // Always use backend proxy (HARDCODED)
+    // This keeps API keys secure on the server
     useBackendProxy: true
   }
 };
@@ -194,16 +195,20 @@ export function loadConfig() {
     const saved = localStorage.getItem('python-tutor-config');
     if (saved) {
       const savedConfig = JSON.parse(saved);
-      // Merge so new defaults (e.g. useBackendProxy: false) apply when not in saved config
+      // Merge so new defaults apply when not in saved config
       if (savedConfig.ai) Object.assign(Config.ai, savedConfig.ai);
       if (savedConfig.voice) Object.assign(Config.voice, savedConfig.voice);
       if (savedConfig.features) Object.assign(Config.features, savedConfig.features);
-      if (savedConfig.platform) Object.assign(Config.platform, savedConfig.platform);
+      // Note: We don't load platform settings from localStorage to prevent backend URL issues
       console.log('✅ Configuration loaded from storage');
     }
   } catch (e) {
     console.warn('Could not load config from localStorage:', e);
   }
+  
+  // HARDCODED: Always use these values (cannot be overridden by localStorage)
+  Config.platform.backendURL = 'https://flexjin.pythonanywhere.com';
+  Config.platform.useBackendProxy = true;
   
   validateConfig();
 }

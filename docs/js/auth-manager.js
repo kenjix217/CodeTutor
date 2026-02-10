@@ -3,7 +3,7 @@
  * Handles Login, Registration, and JWT Storage
  */
 
-import { Config } from './config.js?v=42';
+import { Config } from './config.js?v=43';
 
 export class AuthManager {
     constructor() {
