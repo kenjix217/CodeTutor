@@ -65,6 +65,17 @@ class ProgressResponse(ProgressBase):
 class APIKeyUpdate(BaseModel):
     api_key: str # The key to encrypt and store
 
+# --- Password Change Schema ---
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+# --- Profile Update Schema ---
+class ProfileUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+
 # --- Arcade Schemas ---
 class ArcadeScoreBase(BaseModel):
     mode: str

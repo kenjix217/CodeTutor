@@ -3,16 +3,16 @@
  * Handles navigation, initialization, and module coordination
  */
 
-import { LessonViewer } from './lesson-viewer.js?v=40';
-import { CodeEditor } from './code-editor.js?v=40';
-import { ProgressTracker } from './progress-tracker.js?v=40';
-import { Settings } from './settings.js?v=40';
-import { AITutor } from './ai-tutor.js?v=40';
-import { Config } from './config.js?v=40';
-import { AuthManager } from './auth-manager.js?v=40';
-import { Launchpad } from './launchpad.js?v=40';
-import { gamification } from './error-handler.js?v=40';
-import { errorHandler as friendlyErrorHandler } from './gamification.js?v=40';
+import { LessonViewer } from './lesson-viewer.js?v=42';
+import { CodeEditor } from './code-editor.js?v=42';
+import { ProgressTracker } from './progress-tracker.js?v=42';
+import { Settings } from './settings.js?v=42';
+import { AITutor } from './ai-tutor.js?v=42';
+import { Config } from './config.js?v=42';
+import { AuthManager } from './auth-manager.js?v=42';
+import { Launchpad } from './launchpad.js?v=42';
+import { gamification } from './error-handler.js?v=42';
+import { errorHandler as friendlyErrorHandler } from './gamification.js?v=42';
 
 class PythonTutorApp {
   constructor() {
@@ -87,7 +87,92 @@ class PythonTutorApp {
     // Menu Item Clicks
     document.getElementById('menu-profile')?.addEventListener('click', () => this.showProfile());
     document.getElementById('menu-settings')?.addEventListener('click', () => this.switchView('settings'));
+    document.getElementById('menu-security')?.addEventListener('click', () => this.showSecurity());
     document.getElementById('menu-logout')?.addEventListener('click', () => this.authManager.logout());
+  }
+  
+  /**
+   * Show Security view
+   */
+  showSecurity() {
+    this.switchView('security');
+    
+    // Load user info into security view
+    const user = this.authManager.user;
+    if (user) {
+      document.getElementById('security-username').textContent = user.username || '-';
+      document.getElementById('security-email').textContent = user.email || '-';
+      document.getElementById('security-created').textContent = user.created_at ? new Date(user.created_at).toLocaleDateString() : '-';
+    }
+    
+    // Setup password change form
+    const passwordForm = document.getElementById('change-password-form');
+    if (passwordForm) {
+      passwordForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const currentPass = document.getElementById('current-password').value;
+        const newPass = document.getElementById('new-password').value;
+        const confirmPass = document.getElementById('confirm-password').value;
+        const statusEl = document.getElementById('password-change-status');
+        const submitBtn = passwordForm.querySelector('button[type="submit"]');
+        
+        if (newPass !== confirmPass) {
+          statusEl.textContent = '❌ New passwords do not match';
+          statusEl.className = 'status-message error';
+          return;
+        }
+        
+        if (newPass.length < 8) {
+          statusEl.textContent = '❌ Password must be at least 8 characters';
+          statusEl.className = 'status-message error';
+          return;
+        }
+        
+        // Disable button during API call
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Updating...';
+        
+        // Call backend API to change password
+        const result = await this.authManager.changePassword(currentPass, newPass);
+        
+        if (result.success) {
+          statusEl.textContent = '✅ ' + result.message;
+          statusEl.className = 'status-message success';
+          passwordForm.reset();
+        } else {
+          statusEl.textContent = '❌ ' + result.error;
+          statusEl.className = 'status-message error';
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Update Password';
+      };
+    }
+    
+    // Setup delete account button
+    const deleteBtn = document.getElementById('delete-account-btn');
+    if (deleteBtn) {
+      deleteBtn.onclick = async () => {
+        if (confirm('⚠️ WARNING: This will permanently delete your account and all progress.\n\nThis action cannot be undone.\n\nAre you sure you want to continue?')) {
+          const confirmation = prompt('Type "DELETE" to permanently delete your account:');
+          if (confirmation === 'DELETE') {
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Deleting...';
+            
+            // Call backend API to delete account
+            const result = await this.authManager.deleteAccount();
+            
+            if (result.success) {
+              alert('✅ Account deleted successfully. You have been logged out.');
+            } else {
+              alert('❌ Failed to delete account: ' + result.error);
+              deleteBtn.disabled = false;
+              deleteBtn.textContent = 'Delete Account';
+            }
+          }
+        }
+      };
+    }
   }
   
   async showProfile() {
@@ -104,6 +189,46 @@ class PythonTutorApp {
       // Calculate lessons
       const progress = this.progressTracker.getProgress();
       document.getElementById('profile-lessons').innerText = progress.completedLessons.length;
+      
+      // Populate edit form
+      document.getElementById('edit-firstname').value = user.first_name || '';
+      document.getElementById('edit-lastname').value = user.last_name || '';
+      document.getElementById('edit-email').value = user.email || '';
+      
+      // Setup edit form handler
+      const editForm = document.getElementById('profile-edit-form');
+      if (editForm) {
+          editForm.onsubmit = async (e) => {
+              e.preventDefault();
+              const statusEl = document.getElementById('profile-edit-status');
+              const submitBtn = editForm.querySelector('button[type="submit"]');
+              
+              const profileData = {
+                  first_name: document.getElementById('edit-firstname').value,
+                  last_name: document.getElementById('edit-lastname').value,
+                  email: document.getElementById('edit-email').value
+              };
+              
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Saving...';
+              
+              const result = await this.authManager.updateProfile(profileData);
+              
+              if (result.success) {
+                  statusEl.textContent = '✅ Profile updated successfully!';
+                  statusEl.className = 'status-message success';
+                  // Update displayed info
+                  document.getElementById('profile-fullname').innerText = `${result.user.first_name} ${result.user.last_name}`;
+                  this.updateAuthButtonState();
+              } else {
+                  statusEl.textContent = '❌ ' + result.error;
+                  statusEl.className = 'status-message error';
+              }
+              
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Save Changes';
+          };
+      }
   }
 
   /**
@@ -497,7 +622,9 @@ class PythonTutorApp {
       'progress': 'progress-view',
       'resources': 'resources-view',
       'settings': 'settings-view',
-      'auth': 'auth-view'
+      'auth': 'auth-view',
+      'profile': 'profile-view',
+      'security': 'security-view'
     };
 
     document.querySelectorAll('.view').forEach(view => {

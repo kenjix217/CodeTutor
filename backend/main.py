@@ -152,6 +152,94 @@ def update_api_key(
     return {"status": "updated"}
 
 # ---------------------------
+# USER PROFILE & SECURITY
+# ---------------------------
+
+@app.post("/users/change-password")
+def change_password(
+    password_data: schemas.PasswordChange,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """Change user password after verifying current password"""
+    # Verify current password
+    if not auth.verify_password(password_data.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Current password is incorrect"
+        )
+    
+    # Validate new password length
+    if len(password_data.new_password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password must be at least 8 characters long"
+        )
+    
+    # Hash and update new password
+    current_user.hashed_password = auth.get_password_hash(password_data.new_password)
+    db.commit()
+    
+    return {"status": "success", "message": "Password changed successfully"}
+
+@app.put("/users/profile")
+def update_profile(
+    profile_data: schemas.ProfileUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """Update user profile information"""
+    # Check if email is already taken by another user
+    if profile_data.email and profile_data.email != current_user.email:
+        existing_user = db.query(models.User).filter(
+            models.User.email == profile_data.email
+        ).first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        current_user.email = profile_data.email
+    
+    if profile_data.first_name is not None:
+        current_user.first_name = profile_data.first_name
+    
+    if profile_data.last_name is not None:
+        current_user.last_name = profile_data.last_name
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return {
+        "status": "success",
+        "message": "Profile updated successfully",
+        "user": {
+            "id": current_user.id,
+            "username": current_user.username,
+            "email": current_user.email,
+            "first_name": current_user.first_name,
+            "last_name": current_user.last_name
+        }
+    }
+
+@app.delete("/users/account")
+def delete_account(
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """Permanently delete user account and all associated data"""
+    # Delete user's progress first
+    db.query(models.Progress).filter(
+        models.Progress.user_id == current_user.id
+    ).delete()
+    
+    # Delete the user
+    db.delete(current_user)
+    db.commit()
+    
+    return {"status": "success", "message": "Account deleted successfully"}
+
+# ---------------------------
 # AI PROXY
 # ---------------------------
 

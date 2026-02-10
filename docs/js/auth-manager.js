@@ -3,7 +3,7 @@
  * Handles Login, Registration, and JWT Storage
  */
 
-import { Config } from './config.js';
+import { Config } from './config.js?v=42';
 
 export class AuthManager {
     constructor() {
@@ -126,6 +126,94 @@ export class AuthManager {
             });
             
             return { success: response.ok };
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Change user password
+     */
+    async changePassword(currentPassword, newPassword) {
+        if (!this.token) return { success: false, error: "Not logged in" };
+        
+        try {
+            const response = await fetch(`${Config.platform.backendURL}/users/change-password`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: JSON.stringify({ 
+                    current_password: currentPassword,
+                    new_password: newPassword 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                return { success: true, message: data.message };
+            } else {
+                return { success: false, error: data.detail || "Failed to change password" };
+            }
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Update user profile
+     */
+    async updateProfile(profileData) {
+        if (!this.token) return { success: false, error: "Not logged in" };
+        
+        try {
+            const response = await fetch(`${Config.platform.backendURL}/users/profile`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: JSON.stringify(profileData)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Update local user data
+                this.user = { ...this.user, ...data.user };
+                return { success: true, user: data.user };
+            } else {
+                return { success: false, error: data.detail || "Failed to update profile" };
+            }
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * Delete user account permanently
+     */
+    async deleteAccount() {
+        if (!this.token) return { success: false, error: "Not logged in" };
+        
+        try {
+            const response = await fetch(`${Config.platform.backendURL}/users/account`, {
+                method: 'DELETE',
+                headers: { 
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            if (response.ok) {
+                // Clear local data
+                this.logout();
+                return { success: true };
+            } else {
+                const data = await response.json();
+                return { success: false, error: data.detail || "Failed to delete account" };
+            }
         } catch (e) {
             return { success: false, error: e.message };
         }

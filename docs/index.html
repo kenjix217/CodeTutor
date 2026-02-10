@@ -71,6 +71,29 @@
                     <p id="profile-streak">0 Days</p>
                 </div>
             </div>
+            
+            <!-- Edit Profile Section -->
+            <div class="profile-edit-section" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
+                <h3>Edit Profile</h3>
+                <form id="profile-edit-form" class="profile-form">
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="edit-firstname">First Name</label>
+                            <input type="text" id="edit-firstname" placeholder="First Name">
+                        </div>
+                        <div class="form-group half">
+                            <label for="edit-lastname">Last Name</label>
+                            <input type="text" id="edit-lastname" placeholder="Last Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input type="email" id="edit-email" placeholder="you@example.com">
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <p id="profile-edit-status" class="status-message"></p>
+                </form>
+            </div>
         </div>
       </section>
 
@@ -671,6 +694,69 @@ print(f"Winner: {players[scores.index(max(scores))]}")</code></pre>
           </div>
         </div>
       </section>
+
+      <!-- Security View -->
+      <section id="security-view" class="view">
+        <div class="security-container">
+          <h2>🔒 Account Security</h2>
+          <p class="security-subtitle">Manage your account security settings</p>
+
+          <!-- Change Password Section -->
+          <div class="security-section">
+            <h3>Change Password</h3>
+            <p>Update your password to keep your account secure.</p>
+            
+            <form id="change-password-form" class="security-form">
+              <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" required placeholder="Enter your current password">
+              </div>
+              
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" required placeholder="Minimum 8 characters" minlength="8">
+              </div>
+              
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" required placeholder="Re-enter new password">
+              </div>
+              
+              <button type="submit" class="btn-primary">Update Password</button>
+              <p id="password-change-status" class="status-message"></p>
+            </form>
+          </div>
+
+          <!-- Account Info Section -->
+          <div class="security-section">
+            <h3>Account Information</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Username:</span>
+                <span id="security-username" class="info-value">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span id="security-email" class="info-value">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Account Created:</span>
+                <span id="security-created" class="info-value">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="security-section danger-zone">
+            <h3>⚠️ Danger Zone</h3>
+            <p>These actions cannot be undone. Please proceed with caution.</p>
+            
+            <div class="danger-actions">
+              <button id="delete-account-btn" class="btn-danger">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->
@@ -695,7 +781,7 @@ print(f"Winner: {players[scores.index(max(scores))]}")</code></pre>
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   
   <!-- JavaScript Modules -->
-  <script type="module" src="js/app.js?v=40"></script>
+  <script type="module" src="js/app.js?v=42"></script>
 </body>
 </html>
 
