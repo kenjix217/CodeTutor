@@ -57,32 +57,18 @@ class PythonTutorApp {
     // Check Auth State
     if (this.authManager.isAuthenticated) {
         await this.authManager.fetchUserProfile();
-        this.updateAuthButtonState();
     }
-
-    // Dropdown Logic
-    const menuBtn = document.getElementById('user-menu-btn');
-    const menuContent = document.getElementById('user-dropdown');
     
-    if (menuBtn) {
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // If not logged in, just open auth modal
-            if (!this.authManager.isAuthenticated) {
-                this.switchView('auth');
-                return;
-            }
-            // Toggle dropdown
-            menuContent.classList.toggle('show');
-        });
+    // Setup auth button state (handles both logged in and logged out states)
+    this.updateAuthButtonState();
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', () => {
-            if (menuContent.classList.contains('show')) {
-                menuContent.classList.remove('show');
-            }
-        });
-    }
+    // Close dropdown when clicking outside
+    const menuContent = document.getElementById('user-dropdown');
+    window.addEventListener('click', (e) => {
+        if (menuContent && menuContent.classList.contains('show') && !e.target.closest('.user-menu-container')) {
+            menuContent.classList.remove('show');
+        }
+    });
 
     // Menu Item Clicks
     document.getElementById('menu-profile')?.addEventListener('click', () => this.showProfile());

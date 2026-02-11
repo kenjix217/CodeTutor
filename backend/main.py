@@ -252,7 +252,7 @@ class AIChatRequest(BaseModel):
 @app.post("/api/ai/chat")
 async def ai_chat(
     request: AIChatRequest,
-    current_user: Optional[models.User] = Depends(auth.get_current_user)
+    current_user: Optional[models.User] = Depends(auth.get_current_user_optional)
 ):
     # CENTRAL API KEY CONFIGURATION
     # Replace the string below with your actual OpenRouter API Key
