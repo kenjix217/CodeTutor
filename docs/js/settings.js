@@ -3,7 +3,7 @@
  * Handles user settings and configuration management
  */
 
-import { Config, updateConfig, validateConfig } from './config.js';
+import { Config, updateConfig, validateConfig } from './config.js?v=44';
 
 export class Settings {
   constructor() {

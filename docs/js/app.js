@@ -3,16 +3,16 @@
  * Handles navigation, initialization, and module coordination
  */
 
-import { LessonViewer } from './lesson-viewer.js?v=43';
-import { CodeEditor } from './code-editor.js?v=43';
-import { ProgressTracker } from './progress-tracker.js?v=43';
-import { Settings } from './settings.js?v=43';
-import { AITutor } from './ai-tutor.js?v=43';
-import { Config } from './config.js?v=43';
-import { AuthManager } from './auth-manager.js?v=43';
-import { Launchpad } from './launchpad.js?v=43';
-import { gamification } from './error-handler.js?v=43';
-import { errorHandler as friendlyErrorHandler } from './gamification.js?v=43';
+import { LessonViewer } from './lesson-viewer.js?v=44';
+import { CodeEditor } from './code-editor.js?v=44';
+import { ProgressTracker } from './progress-tracker.js?v=44';
+import { Settings } from './settings.js?v=44';
+import { AITutor } from './ai-tutor.js?v=44';
+import { Config } from './config.js?v=44';
+import { AuthManager } from './auth-manager.js?v=44';
+import { Launchpad } from './launchpad.js?v=44';
+import { gamification } from './error-handler.js?v=44';
+import { errorHandler as friendlyErrorHandler } from './gamification.js?v=44';
 
 class PythonTutorApp {
   constructor() {
@@ -349,20 +349,27 @@ class PythonTutorApp {
     const avatarSpan = document.getElementById('user-avatar');
     const dropdown = document.getElementById('user-dropdown');
     
+    if (!btn) return;
+    
     if (this.authManager.isAuthenticated && this.authManager.user) {
         const user = this.authManager.user;
         nameSpan.innerText = user.first_name || user.username;
         avatarSpan.innerText = user.avatar_url || '👤'; // Use emoji or image
         
-        // Show dropdown content when clicked
+        // Remove old click handler and add new one
         btn.onclick = (e) => {
             e.stopPropagation();
+            if (!this.authManager.isAuthenticated) {
+                this.switchView('auth');
+                return;
+            }
+            // Toggle dropdown
             dropdown.classList.toggle('show');
         };
     } else {
         nameSpan.innerText = 'Login / Register';
         avatarSpan.innerText = '👤';
-        dropdown.classList.remove('show');
+        if (dropdown) dropdown.classList.remove('show');
         
         // Reset to open login modal
         btn.onclick = () => this.switchView('auth');

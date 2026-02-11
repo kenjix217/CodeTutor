@@ -8,7 +8,7 @@
  * - Designed for future free/paid tier separation
  */
 
-import { Config } from './config.js';
+import { Config } from './config.js?v=44';
 
 export class AITutor {
   constructor() {
@@ -21,6 +21,11 @@ export class AITutor {
    * Check if AI tutor is available
    */
   isAvailable() {
+    // If using backend proxy, we only need AI enabled (backend has the key)
+    if (Config.platform.useBackendProxy) {
+      return Config.ai.enabled;
+    }
+    // Otherwise need client-side API key
     return Config.ai.enabled && Config.ai.apiKey && Config.ai.apiKey.trim() !== '';
   }
 
